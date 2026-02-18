@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./firebase");
 
+require("dotenv").config();
+
 const app = express();
 
 app.use(cors());
@@ -110,6 +112,6 @@ app.delete("/proveedores/:proveedorId/productos/:productoId", async (req, res) =
   }
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Servidor corriendo en http://localhost:3000");
 });
