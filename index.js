@@ -112,6 +112,8 @@ app.delete("/proveedores/:proveedorId/productos/:productoId", async (req, res) =
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Servidor corriendo en Port");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
