@@ -1,10 +1,10 @@
-var admin = require("firebase-admin");
+const admin = require("firebase-admin");
 
-//var serviceAccount = require("./lista-compra-8fe84-firebase-adminsdk-fbsvc-d4740ab62d.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
+
+// Arregla los saltos de línea del private_key
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
 
 admin.initializeApp({
-    //credential: admin.credential.cert(serviceAccount)
-    credential: admin.credential.cert(process.env.FIREBASE_KEY)
+    credential: admin.credential.cert(serviceAccount),
 });
-
-module.exports = admin.firestore();
