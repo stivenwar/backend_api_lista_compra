@@ -111,6 +111,22 @@ app.delete("/proveedores/:proveedorId/productos/:productoId", async (req, res) =
     res.status(500).json({ error: error.message });
   }
 });
+app.delete("/proveedores/:proveedorId", async (req, res) => {
+  try {
+    const { proveedorId } = req.params;
+
+
+    await db
+      .collection("proveedores")
+      .doc(proveedorId)
+      .delete();
+
+    res.json({ message: "Proveedor eliminado correctamente" });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 

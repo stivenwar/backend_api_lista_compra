@@ -1,5 +1,7 @@
 const admin = require("firebase-admin");
 
+
+
 const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
 // Arregla los saltos de línea del private_key
