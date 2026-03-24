@@ -1,12 +1,9 @@
 const admin = require("firebase-admin");
 
-const key = require("./lista-compra-8fe84-firebase-adminsdk-fbsvc-d4740ab62d.json")
+const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
 
-if (key.private_key) {
-    key.private_key = key.private_key.replace(/\\n/g, '\n');
-}
 
 admin.initializeApp({
-    credential: admin.credential.cert(key),
+    credential: admin.credential.cert(serviceAccount),
 });
 module.exports = admin.firestore();
