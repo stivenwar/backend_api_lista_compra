@@ -9,6 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+const lista_compras_route = require("./listas_api_compras/listas");
+
+app.use("/lista_compras", lista_compras_route);
+
+
+
 /* =========================
    CREAR PROVEEDOR
 ========================= */
