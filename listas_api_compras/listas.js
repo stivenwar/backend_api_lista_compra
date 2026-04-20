@@ -16,55 +16,51 @@ router.get("/", async (req, res) => {
 })
 router.post("/", async (req, res) => {
     try {
-        console.log(req.body);
-        const { nombre, items } = req.body;
+        const { nombre, items, week, anio, dia } = req.body;
 
-        const listaRef = await db.collection("lista_compras").add({
-            nombre,
-            createdAt: new Date()
-        });
+        const snapshot = await db
+            .collection("lista_compras")
+            .where("week", "==", week)
+            .where("anio", "==", anio)
+            .get();
 
-        const listaId = listaRef.id;
+        let listaRef;
 
-        const batch = db.batch();
+        if (!snapshot.empty) {
+            listaRef = snapshot.docs[0].ref;
 
-        items.forEach(item => {
-
-            const itemRef = db
-                .collection("lista_compras")
-                .doc(listaId)
-                .collection("items")
-                .doc();
-
-            batch.set(itemRef, {
-                proveedorId: item.proveedorId,
-                productoId: item.productoId,
-                cantidad: item.cantidad,
-                checked: false
+            await listaRef.update({
+                [dia]: items
             });
 
+            return res.json({
+                id: listaRef.id,
+                mensaje: "Lista actualizada"
+            });
+        }
+
+        listaRef = await db.collection("lista_compras").add({
+            nombre,
+            week,
+            anio,
+            createdAt: new Date(),
+            lunes: dia === "lunes" ? items : [],
+            jueves: dia === "jueves" ? items : []
         });
 
-        await batch.commit();
-
-        res.json({
-            id: listaId,
-            nombre
+        return res.json({
+            id: listaRef.id,
+            mensaje: "Lista creada"
         });
-
     } catch (error) {
-
         res.status(500).json({ error: error.message });
-
     }
-
-})
+});
 router.get("/:id", async (req, res) => {
 
     try {
 
         const { id } = req.params;
-        console.log("id", id);
 
         const listaDoc = await db.collection("lista_compras").doc(id).get();
 
@@ -122,7 +118,6 @@ router.get("/:id", async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
 
         res.status(500).json({ error: error.message });
 
@@ -135,8 +130,6 @@ router.put("/:id/items", async (req, res) => {
 
         const { id } = req.params;
         const { items } = req.body;
-        console.log(id);
-        console.log(items);
 
 
         const itemsRef = db
@@ -181,11 +174,11 @@ router.put("/:id/items", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-    console.log("DELETE ID:", req.params.id);
+
     try {
 
         const { id } = req.params;
-        console.log(id);
+
 
 
         await db.collection("lista_compras").doc(id).delete();

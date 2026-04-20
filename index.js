@@ -23,8 +23,7 @@ app.use("/lista_compras", lista_compras_route);
 app.post("/proveedores", async (req, res) => {
   try {
     const { name, id } = req.body;
-    console.log(name);
-    console.log(id);
+
 
     const proveedorRef = await db.collection("proveedores").add({
       name,
@@ -45,8 +44,7 @@ app.post("/proveedores/:id/productos", async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    console.log(name);
-    console.log(id);
+
 
     const productoRef = await db
       .collection("proveedores")
@@ -70,7 +68,6 @@ app.post("/proveedores/:id/productos", async (req, res) => {
 app.get("/proveedores", async (req, res) => {
   try {
 
-    console.log("hola");
 
     const snapshot = await db.collection("proveedores").get();
 
